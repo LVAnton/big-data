@@ -1,0 +1,100 @@
+version: '3.8'
+
+x-airflow-common:
+  &airflow-common
+  build: .
+  env_file:
+    - .env
+  environment:
+    - AIRFLOW__CORE__EXECUTOR=LocalExecutor
+    - AIRFLOW__CORE__SQL_ALCHEMY_CONN=${AIRFLOW__CORE__SQL_ALCHEMY_CONN}
+    - AIRFLOW__CORE__FERNET_KEY=${AIRFLOW__CORE__FERNET_KEY}
+    - AIRFLOW__CORE__LOAD_EXAMPLES=False
+    - AIRFLOW__CORE__LOAD_DEFAULT_CONNECTIONS=False
+    - AIRFLOW__WEBSERVER__SECRET_KEY=${AIRFLOW__WEBSERVER__SECRET_KEY}
+    - AIRFLOW_CONN_ODS_POSTGRES=${AIRFLOW_CONN_ODS_POSTGRES}
+    - AIRFLOW_CONN_MINIO_CONN=${AIRFLOW_CONN_MINIO_CONN}
+    - AIRFLOW_CONN_MINIO_CONN__EXTRA=${AIRFLOW_CONN_MINIO_CONN__EXTRA}
+  volumes:
+    - ./dags:/opt/airflow/dags
+    - ./logs:/opt/airflow/logs
+    - ./plugins:/opt/airflow/plugins
+    - ./sql:/opt/airflow/sql
+  depends_on:
+    - airflow_postgres
+  networks:
+    - airflow_net
+
+services:
+  airflow_postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+    volumes:
+      - postgres_airflow_data:/var/lib/postgresql/data
+    networks:
+      - airflow_net
+    ports:
+      - "5433:5432"
+
+  airflow-init:
+    <<: *airflow-common
+    entrypoint: ["/opt/airflow/scripts/init_airflow.sh"]
+    volumes:
+      - ./scripts:/opt/airflow/scripts
+    restart: "no"
+
+  airflow-webserver:
+    <<: *airflow-common
+    command: webserver
+    ports:
+      - "8080:8080"
+
+  airflow-scheduler:
+    <<: *airflow-common
+    command: scheduler
+
+  minio:
+    image: minio/minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+    networks:
+      - airflow_net
+
+  ods_postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: ${ODS_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${ODS_POSTGRES_PASSWORD}
+      POSTGRES_DB: ${ODS_POSTGRES_DB}
+    ports:
+      - "5434:5432"
+    volumes:
+      - ods_pgdata:/var/lib/postgresql/data
+    networks:
+      - airflow_net
+
+  selenium:
+    image: selenium/standalone-chrome
+    shm_size: 2gb
+    ports:
+      - "4444:4444"
+    networks:
+      - airflow_net
+
+networks:
+  airflow_net:
+
+volumes:
+  postgres_airflow_data:
+  minio_data:
+  ods_pgdata:
