@@ -4,12 +4,14 @@ from globals import get_postgres_client, get_minio_client, get_mongo_client
 
 BUCKETS = [
     "iphone-17-pro-max-cheap",
-    "hh-vacancies"
+    "hh-vacancies",
+    "avito-vacancies"
 ]
 
 COLLECTIONS = [
     "iphone_ads",
-    "hh_vacancies"
+    "hh_vacancies",
+    "avito_vacancies"
 ]
 
 @dag(default_args={'owner': 'airflow', 'start_date': datetime.today()},

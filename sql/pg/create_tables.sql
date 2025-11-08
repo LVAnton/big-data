@@ -23,3 +23,16 @@ CREATE TABLE IF NOT EXISTS hh_vacancies (
     url TEXT,
     published_at TIMESTAMP
 );
+
+CREATE TABLE IF NOT EXISTS avito_vacancies (
+    vacancy_id SERIAL PRIMARY KEY,
+    url TEXT UNIQUE NOT NULL,
+    city TEXT,
+    title TEXT,
+    location TEXT,
+    description TEXT,
+    salary_from NUMERIC,
+    salary_to NUMERIC,
+    salary_type TEXT,
+    scraped_at TIMESTAMP DEFAULT NOW()
+);
