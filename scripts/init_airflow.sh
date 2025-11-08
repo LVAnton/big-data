@@ -15,5 +15,6 @@ airflow users create \
 
 echo "Adding connections..."
 airflow connections add ods_postgres --conn-uri "${AIRFLOW_CONN_ODS_POSTGRES}" || true
+airflow connections add ods_mongo --conn-uri "${AIRFLOW_CONN_ODS_MONGO}" || true
 
 echo "Initialization complete!"

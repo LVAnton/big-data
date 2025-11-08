@@ -11,6 +11,10 @@ class MinioInterface(ABC):
         ...
 
     @abstractmethod
+    def upsert_object(self, bucket: str, key: str, data: bytes) -> None:
+        ...
+
+    @abstractmethod
     def bucket_exists(self, bucket: str) -> bool:
         ...
 
@@ -35,6 +39,9 @@ class MinioBoto3(MinioInterface):
         )
 
     def upload_bytes(self, data: bytes, bucket: str, key: str) -> None:
+        self.client.upload_fileobj(io.BytesIO(data), bucket, key)
+
+    def upsert_object(self, bucket: str, key: str, data: bytes) -> None:
         self.client.upload_fileobj(io.BytesIO(data), bucket, key)
 
     def bucket_exists(self, bucket: str) -> bool:

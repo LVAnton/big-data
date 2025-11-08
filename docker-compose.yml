@@ -15,6 +15,7 @@ x-airflow-common:
     - AIRFLOW_CONN_ODS_POSTGRES=${AIRFLOW_CONN_ODS_POSTGRES}
     - AIRFLOW_CONN_MINIO_CONN=${AIRFLOW_CONN_MINIO_CONN}
     - AIRFLOW_CONN_MINIO_CONN__EXTRA=${AIRFLOW_CONN_MINIO_CONN__EXTRA}
+    - AIRFLOW_CONN_ODS_MONGO=${AIRFLOW_CONN_ODS_MONGO}
   volumes:
     - ./dags:/opt/airflow/dags
     - ./logs:/opt/airflow/logs
@@ -83,6 +84,19 @@ services:
     networks:
       - airflow_net
 
+  ods_mongo:
+    image: mongo:6
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${ODS_MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${ODS_MONGO_PASSWORD}
+      MONGO_INITDB_DATABASE: ${ODS_MONGO_DB}
+    ports:
+      - "27017:27017"
+    volumes:
+      - ods_mongo_data:/data/db
+    networks:
+      - airflow_net
+
   selenium:
     image: selenium/standalone-chrome
     shm_size: 2gb
@@ -98,3 +112,4 @@ volumes:
   postgres_airflow_data:
   minio_data:
   ods_pgdata:
+  ods_mongo_data:
