@@ -114,8 +114,8 @@
 ### Демонстрация хранилищ данных
 
 # PostgreSQL
-![Postgres подключение](readme_imgs/Postgres_с_командой.jpg)
-![Postgres данные](Postgres_данные_таблицы.jpg)
+![Postgres подключение](readme_imgs/postgres_с_командой.jpg)
+![Postgres данные](readme_imgs/Postgres_данные_таблицы.jpg)
 # minIO
 ![minIO картинка](readme_imgs/s3_картинка.jpg)
 ![minIO json](readme_imgs/s3_данные.jpg)
