@@ -1,6 +1,6 @@
 # Технологии хранения больших данных
 
-**Выполнили:** Батаев Илья Сергеевич, Лапин Антон Владимирович  
+**Выполнили:** Погрибняк Иван Сергеевич, Лапин Антон Владимирович  
 **Источники данных:** Avito, hh.ru
 
 ---
@@ -111,27 +111,15 @@
 - Обработка зарплатных данных (from/to)
 - Ежедневное обновление данных
 
-### Работа с хранилищами данных
+### Демонстрация хранилищ данных
 
-#### PostgreSQL
-
-**Подключение и проверка:**
-```sql
--- Проверка количества записей
-SELECT COUNT(*) FROM iphone_ads;
-SELECT COUNT(*) FROM avito_vacancies; 
-SELECT COUNT(*) FROM hh_vacancies;
-
--- Анализ цен на iPhone
-SELECT city, AVG(price) as avg_price, COUNT(*) as count 
-FROM iphone_ads 
-GROUP BY city;
-
--- Сравнение вакансий по городам
-SELECT city, COUNT(*) as vacancy_count 
-FROM avito_vacancies 
-GROUP BY city;
-
-
-#PostgreSQL
+# PostgreSQL
+![Postgres подключение](readme_imgs/Postgres_с_командой.jpg)
+![Postgres данные](Postgres_данные_таблицы.jpg)
+# minIO
+![minIO картинка](readme_imgs/s3_картинка.jpg)
+![minIO json](readme_imgs/s3_данные.jpg)
+# Mongo
+![Mongo подключение](readme_imgs/mongo_команда.jpg)
+![Mongo данные](readme_imgs/mongo_данные.jpg)
 
